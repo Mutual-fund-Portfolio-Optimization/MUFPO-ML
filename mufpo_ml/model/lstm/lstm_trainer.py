@@ -7,7 +7,7 @@ import pandas as pd
 from datetime import datetime
 from ..trainer import BaseTrainer
 
-class TFTTrainer(BaseTrainer):
+class LSTMTrainer(BaseTrainer):
     def __init__(self, train_dataset, trainer, device='gpu'):
         self.device = device
         self.trainer = trainer
