@@ -75,8 +75,8 @@ class FinanceIndicatorFiller(BaseProcessor):
         pass
 
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:
-        df = df.rename(columns={'fund_name': 'tic', 'unknow2': 'day'})
-        fund_data = df[['date', 'tic', 'nav/unit', 'day']]
+        df = df.rename(columns={'fund_name': 'tic'})
+        fund_data = df[['date', 'tic', 'nav/unit']]
         fund_data['open'] = fund_data['nav/unit']
         fund_data['high'] = fund_data['nav/unit']
         fund_data['low'] = fund_data['nav/unit']
