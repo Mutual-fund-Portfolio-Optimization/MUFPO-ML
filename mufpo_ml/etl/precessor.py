@@ -2,7 +2,7 @@ import pandas as pd
 from typing import Any, Union
 from datetime import datetime, timedelta
 from pytorch_forecasting import TimeSeriesDataSet
-
+from finrl.meta.preprocessor.preprocessors import FeatureEngineer
 
 class BaseProcessor:
     def __init__(self):
@@ -70,6 +70,30 @@ class DataFiller(BaseProcessor):
         )
         return date_range.merge(x, on=self.date_col, how='left')
     
+class FinanceIndicatorFiller(BaseProcessor):
+    def __init__(self):
+        pass
+
+    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
+        df = df.rename(columns={'fund_name': 'tic', 'unknow2': 'day'})
+        fund_data = df[['date', 'tic', 'nav/unit', 'day']]
+        fund_data['open'] = fund_data['nav/unit']
+        fund_data['high'] = fund_data['nav/unit']
+        fund_data['low'] = fund_data['nav/unit']
+        fund_data['close'] = fund_data['nav/unit']
+        fund_data.drop(columns=['nav/unit'], inplace=True)
+        fund_data['volume'] = 0 
+
+        fe = FeatureEngineer(
+                    use_technical_indicator=True,
+                    use_turbulence=False,
+                    user_defined_feature = False)
+        fund_data = fe.preprocess_data(fund_data)
+        return fund_data[['date', 'tic', 'close', 'macd',
+       'boll_ub', 'boll_lb', 'rsi_30', 'cci_30', 'dx_30', 'close_30_sma',
+       'close_60_sma']].rename(columns={'tic': 'fund_name', 'close': 'nav/unit'})
+
+
 def timeseries_train_test_split(
         dataset_kwarg: dict,
         test_dataset_kwarg: dict = {},
