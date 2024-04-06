@@ -1,0 +1,11 @@
+chronos @ git+https://github.com/amazon-science/chronos-forecasting.git@b4a6c0c2eb5af70853b17a8709a6ebf4e7945b23
+finrl @ git+https://github.com/AI4Finance-Foundation/FinRL.git@50049b7d48ed4a71ac4dba93ad56f55d116bb0d1
+MUFPO @ git+https://github.com/Mutual-fund-Portfolio-Optimization/MUFPO-common-python.git@d36240d9307ebff653a9b55db8e0f868b5fdd6ec
+gluonts[torch]
+numpy==1.23.5
+torch>=2.0.0
+wandb
+scipy
+pandas==2.1.4
+huggingface_hub[cli]
+
