@@ -1,5 +1,5 @@
 from lightning.pytorch.callbacks import EarlyStopping
-from pytorch_forecasting import TemporalFusionTransformer, NormalDistributionLoss
+from pytorch_forecasting import RecurrentNetwork
 import lightning as pl
 from pytorch_forecasting.metrics import MAE, MAPE, RMSE, SMAPE
 import torch
@@ -11,7 +11,7 @@ class TFTTrainer(BaseTrainer):
     def __init__(self, train_dataset, trainer, device='gpu'):
         self.device = device
         self.trainer = trainer
-        self.tft = TemporalFusionTransformer.from_dataset(
+        self.tft = RecurrentNetwork.from_dataset(
             # dataset
             train_dataset,
             # architecture hyperparameters
