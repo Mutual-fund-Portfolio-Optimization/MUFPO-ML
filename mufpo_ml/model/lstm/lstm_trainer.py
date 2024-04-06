@@ -11,32 +11,19 @@ class TFTTrainer(BaseTrainer):
     def __init__(self, train_dataset, trainer, device='gpu'):
         self.device = device
         self.trainer = trainer
-        self.tft = RecurrentNetwork.from_dataset(
-            # dataset
+        self.rnn = RecurrentNetwork.from_dataset(
             train_dataset,
-            # architecture hyperparameters
-            hidden_size=128,
-            attention_head_size=4,
-            dropout=0.1,
-            hidden_continuous_size=16,
-            # loss metric to optimize
-            loss=NormalDistributionLoss(),
-            # logging frequency
-            log_interval=2,
-            # optimizer parameters
-            learning_rate=0.01,
-            reduce_on_plateau_patience=4
         )
 
     def fit(self, train_dataloader, validate_dataloader):
         self.trainer.fit(
-            self.tft,
+            self.rnn,
             train_dataloaders=train_dataloader,
             val_dataloaders=validate_dataloader
         )
     
     def predict(self, dataloader):
-        output = self.tft.predict(dataloader, return_index=True).cpu()
+        output = self.rnn.predict(dataloader, return_index=True).cpu()
         temp = pd.DataFrame(output[0], columns=date_index, index=output[2].fund_name)
         new_df = temp.stack().reset_index(level=[0, 1])
         new_df = new_df.rename(columns={0: 'nav/unit_forecast','level_1': 'date'})
@@ -50,7 +37,7 @@ class TFTTrainer(BaseTrainer):
             else:
                 y = torch.concat([data[0]['decoder_target'], y])
 
-        output = self.tft.predict(test_dataloader).cpu()
+        output = self.rnn.predict(test_dataloader).cpu()
         return {
             "MAE": MAE()(y, output),
             "RMSE": RMSE()(y, output),
