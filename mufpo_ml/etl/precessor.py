@@ -99,14 +99,12 @@ def timeseries_train_test_split(
         test_dataset_kwarg: dict = {},
         val: bool = True,
         batch_size: int = 64,
-        test: bool = False
+        test: bool = False,
+        predict_mode: bool = False
     ):  
         if test:
             if (test_dataset_kwarg is None) or (len(test_dataset_kwarg) == 0):
                 raise Exception('test_dataset_kwarg is empty')
-            
-            if not test_dataset_kwarg['predict_mode']:
-                raise ValueError('predict_mode in test_dataset_kwarg must be True')
         
         dataset = TimeSeriesDataSet(**dataset_kwarg)
         if test:
