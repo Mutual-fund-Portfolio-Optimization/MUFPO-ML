@@ -5,12 +5,13 @@ from pytorch_forecasting.metrics import MAE, MAPE, RMSE, SMAPE
 import numpy as np
 
 class ChronosSmallTrainer(BaseTrainer):
-    def __init__(self, device):
+    def __init__(self, device, prediction_length):
         self.pipeline = ChronosPipeline.from_pretrained(
             "amazon/chronos-t5-small",
             device_map=device,
             torch_dtype=torch.bfloat16,
         )
+        self.prediction_length = prediction_length
 
     def fit(self, train_dataloader):
         raise NotImplemented()
@@ -21,7 +22,7 @@ class ChronosSmallTrainer(BaseTrainer):
             context = torch.tensor(data[0]['encoder_target'])
             forecast = self.pipeline.predict(
                 context,
-                64,
+                self.prediction_length,
                 num_samples=10,
                 temperature=1.0,
                 top_k=50,
