@@ -8,10 +8,9 @@ from datetime import datetime
 from ..trainer import BaseTrainer
 
 class LSTMTrainer(BaseTrainer):
-    def __init__(self, train_dataset, trainer, date_index, device='gpu'):
+    def __init__(self, train_dataset, trainer, device='gpu'):
         self.device = device
         self.trainer = trainer
-        self.date_index = date_index
         self.rnn = RecurrentNetwork.from_dataset(
             train_dataset,
         )
@@ -36,8 +35,8 @@ class LSTMTrainer(BaseTrainer):
 
         output = self.predict(test_dataloader)
         return {
-            "MAE": MAE()(y, output),
-            "RMSE": RMSE()(y, output),
-            "MAPE": MAPE()(y, output),
-            "SMAPE": SMAPE()(y, output)
+            "MAE": MAE()(y, output)[0],
+            "RMSE": RMSE()(y, output)[0],
+            "MAPE": MAPE()(y, output)[0],
+            "SMAPE": SMAPE()(y, output)[0]
         }

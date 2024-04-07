@@ -41,8 +41,8 @@ class ChronosSmallTrainer(BaseTrainer):
         y = torch.concat(y)
 
         return {
-            "MAE": MAE()(y, output),
-            "RMSE": RMSE()(y, output),
-            "MAPE": MAPE()(y, output),
-            "SMAPE": SMAPE()(y, output)
+            "MAE": MAE()(y, output)[0],
+            "RMSE": RMSE()(y, output)[0],
+            "MAPE": MAPE()(y, output)[0],
+            "SMAPE": SMAPE()(y, output)[0]
         }
