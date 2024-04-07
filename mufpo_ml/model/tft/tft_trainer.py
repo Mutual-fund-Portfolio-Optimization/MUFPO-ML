@@ -8,10 +8,9 @@ from datetime import datetime
 from ..trainer import BaseTrainer
 
 class TFTTrainer(BaseTrainer):
-    def __init__(self, train_dataset, trainer, device='gpu', date_index):
+    def __init__(self, train_dataset, trainer, device='gpu'):
         self.device = device
         self.trainer = trainer
-        self.date_index = date_index
         self.tft = TemporalFusionTransformer.from_dataset(
             # dataset
             train_dataset,
@@ -37,11 +36,8 @@ class TFTTrainer(BaseTrainer):
         )
     
     def predict(self, dataloader):
-        output = self.tft.predict(dataloader, return_index=True)
-        temp = pd.DataFrame(output[0], columns=self.date_index, index=output[2].fund_name)
-        new_df = temp.stack().reset_index(level=[0, 1])
-        new_df = new_df.rename(columns={0: 'nav/unit_forecast','level_1': 'date'})
-        return new_df
+        output = self.tft.predict(dataloader).cpu()
+        return output
 
     def eval(self, test_dataloader):
         y = []
@@ -50,7 +46,7 @@ class TFTTrainer(BaseTrainer):
             
         y = torch.concat([data[0]['decoder_target'], y])
 
-        output = self.tft.predict(test_dataloader).cpu()
+        output = self.predict(test_dataloader).cpu()
         return {
             "MAE": MAE()(y, output),
             "RMSE": RMSE()(y, output),

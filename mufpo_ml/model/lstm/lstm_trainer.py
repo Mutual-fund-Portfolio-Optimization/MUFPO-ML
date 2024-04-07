@@ -8,9 +8,10 @@ from datetime import datetime
 from ..trainer import BaseTrainer
 
 class LSTMTrainer(BaseTrainer):
-    def __init__(self, train_dataset, trainer, device='gpu'):
+    def __init__(self, train_dataset, trainer, date_index, device='gpu'):
         self.device = device
         self.trainer = trainer
+        self.date_index = date_index
         self.rnn = RecurrentNetwork.from_dataset(
             train_dataset,
         )
@@ -23,11 +24,8 @@ class LSTMTrainer(BaseTrainer):
         )
     
     def predict(self, dataloader):
-        output = self.rnn.predict(dataloader, return_index=True).cpu()
-        temp = pd.DataFrame(output[0], columns=date_index, index=output[2].fund_name)
-        new_df = temp.stack().reset_index(level=[0, 1])
-        new_df = new_df.rename(columns={0: 'nav/unit_forecast','level_1': 'date'})
-        return new_df
+        output = self.rnn.predict(dataloader).cpu()
+        return output
 
     def eval(self, test_dataloader):
         y = []
@@ -36,7 +34,7 @@ class LSTMTrainer(BaseTrainer):
             
         y = torch.concat([data[0]['decoder_target'], y])
 
-        output = self.rnn.predict(test_dataloader).cpu()
+        output = self.predict(test_dataloader)
         return {
             "MAE": MAE()(y, output),
             "RMSE": RMSE()(y, output),
