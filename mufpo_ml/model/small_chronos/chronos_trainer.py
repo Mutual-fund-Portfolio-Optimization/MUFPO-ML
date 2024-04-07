@@ -19,7 +19,7 @@ class ChronosSmallTrainer(BaseTrainer):
         results = []
         for data in test_dataloader:
             context = torch.tensor(data[0]['encoder_target'])
-            forecast = pipeline.predict(
+            forecast = self.pipeline.predict(
                 context,
                 64,
                 num_samples=10,
