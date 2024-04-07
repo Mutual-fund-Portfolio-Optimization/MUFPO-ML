@@ -35,8 +35,8 @@ class LSTMTrainer(BaseTrainer):
 
         output = self.predict(test_dataloader)
         return {
-            "MAE": MAE()(y, output)[0],
-            "RMSE": RMSE()(y, output)[0],
-            "MAPE": MAPE()(y, output)[0],
-            "SMAPE": SMAPE()(y, output)[0]
+            "MAE": MAE()(y, output).item(),
+            "RMSE": RMSE()(y, output).item(),
+            "MAPE": MAPE()(y, output).item(),
+            "SMAPE": SMAPE()(y, output).item()
         }
