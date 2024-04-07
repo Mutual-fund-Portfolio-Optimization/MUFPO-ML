@@ -43,12 +43,11 @@ class TFTTrainer(BaseTrainer):
         return new_df
 
     def eval(self, test_dataloader):
-        y = None
+        y = []
         for data in test_dataloader:
-            if y == None:
-                y = data[0]['decoder_target']
-            else:
-                y = torch.concat([data[0]['decoder_target'], y])
+            y.append(data[0]['decoder_target'])
+            
+        y = torch.concat([data[0]['decoder_target'], y])
 
         output = self.tft.predict(test_dataloader).cpu()
         return {
