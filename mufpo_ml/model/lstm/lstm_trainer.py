@@ -32,7 +32,7 @@ class LSTMTrainer(BaseTrainer):
         for data in test_dataloader:
             y.append(data[0]['decoder_target'])
             
-        y = torch.concat([data[0]['decoder_target'], y])
+        y = torch.concat(y)
 
         output = self.predict(test_dataloader)
         return {

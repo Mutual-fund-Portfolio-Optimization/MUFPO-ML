@@ -38,7 +38,7 @@ class ChronosSmallTrainer(BaseTrainer):
         for data in test_dataloader:
             y.append(data[0]['decoder_target'])
 
-        y = torch.concat([data[0]['decoder_target'], y])
+        y = torch.concat(y)
 
         return {
             "MAE": MAE()(y, output),
