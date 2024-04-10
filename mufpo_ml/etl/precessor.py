@@ -110,7 +110,7 @@ def timeseries_train_test_split(
         if test:
             test_dataset = TimeSeriesDataSet(**test_dataset_kwarg)
             if predict_mode:
-                test_dataloader = test_dataset.to_dataloader(train=False, predict_mode=predict_mode, batch_size=500)
+                test_dataloader = test_dataset.to_dataloader(train=False, batch_size=1000)
             else:
                 test_dataloader = test_dataset.to_dataloader(train=False, batch_size=batch_size)
         
