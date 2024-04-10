@@ -35,10 +35,10 @@ class TFTTrainer(BaseTrainer):
             val_dataloaders=validate_dataloader
         )
     
-    def predict(self, dataloader):
-        output = self.tft.predict(dataloader).cpu()
+    def predict(self, dataloader, return_index):
+        output = self.tft.predict(dataloader, return_index=return_index)
         return output
-
+    
     def eval(self, test_dataloader):
         y = []
         for data in test_dataloader:
