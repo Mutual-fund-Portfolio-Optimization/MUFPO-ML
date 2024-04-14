@@ -8,6 +8,7 @@ if os.path.isfile(requirement_path):
     with open(requirement_path) as f:
         install_requires = list(f.read().splitlines())
 
+
 setup(
     name='MUFPO-ML',
     version='0.0.19',
